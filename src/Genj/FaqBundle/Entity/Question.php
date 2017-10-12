@@ -46,29 +46,29 @@ class Question
     protected $rank;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", name="is_active")
      */
     protected $isActive;
 
     /**
-     * @ORM\Column( type="datetime")
+     * @ORM\Column( type="datetime", name="publish_at")
      */
     protected $publishAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true, name="expires_at")
      */
     protected $expiresAt;
 
     /**
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
     protected $createdAt;
 
     /**
      * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="updated_at")
      */
     protected $updatedAt;
 
