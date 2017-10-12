@@ -2,9 +2,9 @@
 
 namespace Genj\FaqBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Category
@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\Criteria;
  *     name="genj_faq_category",
  *     indexes={@ORM\Index(name="is_active_idx", columns={"is_active"})}
  * )
+ *
+ * @ORM\HasLifecycleCallbacks()
  *
  * @package Genj\FaqBundle\Entity
  */
@@ -69,6 +71,14 @@ class Category
      * @ORM\Column(type="string", length=100)
      */
     protected $slug;
+
+    /**
+     * Category constructor.
+     */
+    public function __construct()
+    {
+        $this->setCreatedAt(new \DateTime());
+    }
 
     /**
      * Get id
@@ -302,7 +312,7 @@ class Category
      */
     public function __toString()
     {
-        return (string) $this->getHeadline();
+        return (string)$this->getHeadline();
     }
 
     /**
@@ -326,4 +336,15 @@ class Category
             'slug' => $this->getSlug()
         );
     }
+
+    /**
+     * Set UpdatedAt
+     *
+     * @ORM\PreFlush()
+     */
+    public function preFlush()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
 }
