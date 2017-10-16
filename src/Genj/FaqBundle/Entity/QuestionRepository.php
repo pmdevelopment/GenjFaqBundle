@@ -19,14 +19,14 @@ class QuestionRepository extends EntityRepository
     public function retrieveFirstByCategorySlug($categorySlug)
     {
         $query = $this->createQueryBuilder('q')
-            ->join('q.category', 'c')
-            ->where('c.slug = :categorySlug')
-            ->andWhere('q.isActive = :isActive')
-            ->andWhere('q.publishAt <= :publishAt')
-            ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
-            ->orderBy('q.rank', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery();
+                      ->join('q.category', 'c')
+                      ->where('c.slug = :categorySlug')
+                      ->andWhere('q.isActive = :isActive')
+                      ->andWhere('q.publishAt <= :publishAt')
+                      ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
+                      ->orderBy('q.rank', 'ASC')
+                      ->setMaxResults(1)
+                      ->getQuery();
 
         $query->setParameter('categorySlug', $categorySlug);
         $query->setParameter('isActive', true);
@@ -44,13 +44,13 @@ class QuestionRepository extends EntityRepository
     public function retrieveMostRecent($max)
     {
         $query = $this->createQueryBuilder('q')
-            ->join('q.category', 'c')
-            ->where('q.isActive = :isActive')
-            ->andWhere('q.publishAt <= :publishAt')
-            ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
-            ->orderBy('q.publishAt', 'DESC')
-            ->setMaxResults($max)
-            ->getQuery();
+                      ->join('q.category', 'c')
+                      ->where('q.isActive = :isActive')
+                      ->andWhere('q.publishAt <= :publishAt')
+                      ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
+                      ->orderBy('q.publishAt', 'DESC')
+                      ->setMaxResults($max)
+                      ->getQuery();
 
         $query->setParameter('isActive', true);
         $query->setParameter('publishAt', date('Y-m-d H:i:s'));
@@ -64,33 +64,62 @@ class QuestionRepository extends EntityRepository
      * @param int    $max
      * @param array  $whereFields
      *
-     * @return DoctrineCollection|null
+     * @return array|null
      */
-    public function retrieveByQuery($searchQuery, $max, $whereFields = array('headline', 'body'))
+    public function retrieveByQuery($searchQuery, $max, $whereFields = array(
+        'headline',
+        'body'
+    ))
     {
         $sql = array();
-        foreach ($whereFields as $field ) {
+        foreach ($whereFields as $field) {
             $sql[] = 'q.' . $field . ' like :searchQuery';
         }
 
-        $where = implode (' or ', $sql);
+        $where = implode(' or ', $sql);
 
         $query = $this->createQueryBuilder('q')
-            ->join('q.category', 'c')
-            ->where($where)
-            ->andWhere('q.isActive = :isActive')
-            ->andWhere('q.publishAt <= :publishAt')
-            ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
-            ->orderBy('q.publishAt', 'DESC')
-            ->setMaxResults($max)
-            ->getQuery();
+                      ->join('q.category', 'c')
+                      ->where($where)
+                      ->andWhere('q.isActive = :isActive')
+                      ->andWhere('q.publishAt <= :publishAt')
+                      ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
+                      ->orderBy('q.publishAt', 'DESC')
+                      ->setMaxResults($max)
+                      ->getQuery();
 
-        $query->setParameter('searchQuery', '%'. $searchQuery . '%');
+        $query->setParameter('searchQuery', '%' . $searchQuery . '%');
         $query->setParameter('isActive', true);
         $query->setParameter('publishAt', date('Y-m-d H:i:s'));
         $query->setParameter('expiresAt', date('Y-m-d H:i:s'));
 
         return $query->getResult();
+    }
+
+    /**
+     * @param $slug
+     *
+     * @return Question|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function retrieveActiveBySlug($slug)
+    {
+        $query = $this->createQueryBuilder('q')
+                      ->join('q.category', 'c')
+                      ->where('q.slug = :slug')
+                      ->andWhere('q.isActive = :isActive')
+                      ->andWhere('q.publishAt <= :publishAt')
+                      ->andWhere('(q.expiresAt IS NULL OR q.expiresAt >= :expiresAt)')
+                      ->orderBy('q.publishAt', 'DESC')
+                      ->setMaxResults(1)
+                      ->getQuery();
+
+        $query->setParameter('slug', $slug);
+        $query->setParameter('isActive', true);
+        $query->setParameter('publishAt', date('Y-m-d H:i:s'));
+        $query->setParameter('expiresAt', date('Y-m-d H:i:s'));
+
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -103,11 +132,11 @@ class QuestionRepository extends EntityRepository
     public function retrieveByPartialHeadline($query)
     {
         $query = $this->createQueryBuilder('q')
-            ->select('q.id, q.headline')
-            ->where('q.headline LIKE :query')
-            ->orderBy('q.publishAt', 'DESC')
-            ->setParameter('query','%'.$query.'%')
-            ->getQuery();
+                      ->select('q.id, q.headline')
+                      ->where('q.headline LIKE :query')
+                      ->orderBy('q.publishAt', 'DESC')
+                      ->setParameter('query', '%' . $query . '%')
+                      ->getQuery();
 
         return $query->getArrayResult();
     }

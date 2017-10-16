@@ -2,8 +2,8 @@
 
 namespace Genj\FaqBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Question
@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Entity(repositoryClass="Genj\FaqBundle\Entity\QuestionRepository")
  * @ORM\Table(name="genj_faq_question")
+ *
+ * @ORM\HasLifecycleCallbacks()
  *
  * @package Genj\FaqBundle\Entity
  */
@@ -74,9 +76,19 @@ class Question
 
     /**
      * @Gedmo\Slug(fields={"headline"}, updatable=false)
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     protected $slug;
+
+    /**
+     * Question constructor.
+     */
+    public function __construct()
+    {
+        $this
+            ->setCreatedAt(new \DateTime())
+            ->setPublishAt(new \DateTime());
+    }
 
     /**
      * Get id
@@ -335,7 +347,7 @@ class Question
      */
     public function __toString()
     {
-        return (string) $this->getHeadline();
+        return (string)$this->getHeadline();
     }
 
     /**
@@ -383,5 +395,13 @@ class Question
     public function getEntityIdentifier()
     {
         return 'GenjFaqBundle:Question:' . $this->getId();
+    }
+
+    /**
+     * @ORM\PreFlush()
+     */
+    public function preFlush()
+    {
+        $this->setUpdatedAt(new \DateTime());
     }
 }

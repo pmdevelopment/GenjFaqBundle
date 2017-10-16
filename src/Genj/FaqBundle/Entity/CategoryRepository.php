@@ -29,7 +29,7 @@ class CategoryRepository extends EntityRepository
     /**
      * @param string $slug
      *
-     * @return mixed
+     * @return mixed|Category|null
      */
     public function retrieveActiveBySlug($slug)
     {
