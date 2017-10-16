@@ -2,6 +2,7 @@
 
 namespace Genj\FaqBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -81,6 +82,13 @@ class Question
     protected $slug;
 
     /**
+     * @var Tag[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Genj\FaqBundle\Entity\Tag", mappedBy="questions")
+     */
+    protected $tags;
+
+    /**
      * Question constructor.
      */
     public function __construct()
@@ -88,6 +96,8 @@ class Question
         $this
             ->setCreatedAt(new \DateTime())
             ->setPublishAt(new \DateTime());
+
+        $this->setTags(new ArrayCollection());
     }
 
     /**
@@ -338,6 +348,26 @@ class Question
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * @return ArrayCollection|Tag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param ArrayCollection|Tag[] $tags
+     *
+     * @return Question
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
     }
 
     /**
