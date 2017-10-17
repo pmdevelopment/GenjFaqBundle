@@ -18,5 +18,35 @@ use Doctrine\ORM\EntityRepository;
  */
 class TagRepository extends EntityRepository
 {
+    /**
+     * Find One By Name
+     *
+     * @param string $name
+     *
+     * @return null|Tag
+     */
+    public function findOneByName($name)
+    {
+        return $this->findOneBy(
+            [
+                'name' => $name,
+            ]
+        );
+    }
 
+    /**
+     * Find One By Name
+     *
+     * @param string $slug
+     *
+     * @return null|Tag
+     */
+    public function findOneBySlug($slug)
+    {
+        return $this->findOneBy(
+            [
+                'slug' => $slug,
+            ]
+        );
+    }
 }

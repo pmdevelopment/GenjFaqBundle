@@ -8,6 +8,7 @@
 
 namespace Genj\FaqBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -43,12 +44,20 @@ class Tag
     protected $slug;
 
     /**
-     * @var Question
+     * @var Question[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Genj\FaqBundle\Entity\Question", inversedBy="tags")
      * @ORM\JoinTable(name="genj_faq_tag_question_mapping")
      */
     protected $questions;
+
+    /**
+     * Tag constructor.
+     */
+    public function __construct()
+    {
+        $this->setQuestions(new ArrayCollection());
+    }
 
     /**
      * @return mixed
@@ -94,6 +103,26 @@ class Tag
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Question[]|ArrayCollection
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * @param Question[]|ArrayCollection $questions
+     *
+     * @return Tag
+     */
+    public function setQuestions($questions)
+    {
+        $this->questions = $questions;
 
         return $this;
     }
