@@ -94,7 +94,6 @@ class JsonService
 
         /** @var ExportModel $export */
         $export = $this->getSerializer()->deserialize($json, ExportModel::class, 'json');
-        dump($export);
 
         /* Categories */
         foreach ($export->getCategories() as $category) {
