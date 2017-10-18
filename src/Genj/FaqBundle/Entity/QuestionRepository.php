@@ -140,4 +140,20 @@ class QuestionRepository extends EntityRepository
 
         return $query->getArrayResult();
     }
+
+    /**
+     * Find One By Slug
+     *
+     * @param string $slug
+     *
+     * @return null|Question
+     */
+    public function findOneBySlug($slug)
+    {
+        return $this->findOneBy(
+            [
+                'slug' => $slug,
+            ]
+        );
+    }
 }

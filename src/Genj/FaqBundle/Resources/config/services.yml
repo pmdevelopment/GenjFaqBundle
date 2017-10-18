@@ -5,6 +5,7 @@ parameters:
     genj_faq.entity.question_repository.class: Genj\FaqBundle\Entity\QuestionRepository
     genj_faq.entity.category_repository.class: Genj\FaqBundle\Entity\CategoryRepository
     genj_faq.entity.search_repository.class: Genj\FaqBundle\Entity\SearchRepository
+    genj_faq.service.json_service.class: Genj\FaqBundle\Services\JsonService
 
 services:
     genj_faq.entity.question_repository:
@@ -21,3 +22,7 @@ services:
         class:     '%genj_faq.entity.search_repository.class%'
         factory:   ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%genj_faq.entity.search.class%']
+
+    genj_faq.services.json_service:
+        class: '%genj_faq.service.json_service.class%'
+        arguments: ['@doctrine', '@jms_serializer']

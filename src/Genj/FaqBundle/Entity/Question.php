@@ -5,6 +5,7 @@ namespace Genj\FaqBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Class Question
@@ -15,6 +16,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\HasLifecycleCallbacks()
  *
+ * @JMS\ExclusionPolicy("ALL")
+ *
  * @package Genj\FaqBundle\Entity
  */
 class Question
@@ -23,61 +26,85 @@ class Question
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Expose()
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="questions")
      * @ORM\OrderBy({"rank" = "asc"})
+     *
+     * @JMS\Type("integer")
+     * @JMS\Expose()
+     * @JMS\Accessor(getter="getCategoryId", setter="setCategory")
      */
     protected $category;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @JMS\Expose()
      */
     protected $headline;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @JMS\Expose()
      */
     protected $body;
 
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(type="integer")
+     *
+     * @JMS\Expose()
      */
     protected $rank;
 
     /**
      * @ORM\Column(type="boolean", name="is_active")
+     *
+     * @JMS\Expose()
      */
     protected $isActive;
 
     /**
      * @ORM\Column( type="datetime", name="publish_at")
+     *
+     * @JMS\Expose()
      */
     protected $publishAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true, name="expires_at")
+     *
+     * @JMS\Expose()
      */
     protected $expiresAt;
 
     /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="created_at")
+     *
+     * @JMS\Expose()
      */
     protected $createdAt;
 
     /**
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", name="updated_at")
+     *
+     * @JMS\Expose()
      */
     protected $updatedAt;
 
     /**
      * @Gedmo\Slug(fields={"headline"}, updatable=false)
      * @ORM\Column(type="string", length=100, unique=true)
+     *
+     * @JMS\Expose()
      */
     protected $slug;
 
@@ -333,7 +360,7 @@ class Question
      *
      * @return Question
      */
-    public function setCategory(Category $category = null)
+    public function setCategory($category)
     {
         $this->category = $category;
 
@@ -425,6 +452,16 @@ class Question
     public function getEntityIdentifier()
     {
         return 'GenjFaqBundle:Question:' . $this->getId();
+    }
+
+    /**
+     * Get Category Id
+     *
+     * @return int
+     */
+    public function getCategoryId()
+    {
+        return $this->getCategory()->getId();
     }
 
     /**

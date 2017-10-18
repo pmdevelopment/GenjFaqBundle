@@ -11,6 +11,7 @@ namespace Genj\FaqBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Class Tag
@@ -20,6 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="genj_faq_tag")
  *
  * @package Genj\FaqBundle\Entity
+ *
+ * @JMS\ExclusionPolicy("ALL")
  */
 class Tag
 {
@@ -27,6 +30,8 @@ class Tag
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Expose()
      */
     protected $id;
 
@@ -34,12 +39,16 @@ class Tag
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
+     * @JMS\Expose()
      */
     protected $name;
 
     /**
      * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(type="string", length=100, unique=true)
+     *
+     * @JMS\Expose()
      */
     protected $slug;
 
@@ -48,6 +57,10 @@ class Tag
      *
      * @ORM\ManyToMany(targetEntity="Genj\FaqBundle\Entity\Question", inversedBy="tags")
      * @ORM\JoinTable(name="genj_faq_tag_question_mapping")
+     *
+     * @JMS\Type("array<string>")
+     * @JMS\Expose()
+     * @JMS\Accessor(getter="getQuestionSlugs", setter="setQuestions")
      */
     protected $questions;
 
@@ -125,6 +138,21 @@ class Tag
         $this->questions = $questions;
 
         return $this;
+    }
+
+    /**
+     * Questions Ids
+     *
+     * @return array
+     */
+    public function getQuestionSlugs()
+    {
+        $ids = [];
+        foreach ($this->getQuestions() as $question) {
+            $ids[] = $question->getSlug();
+        }
+
+        return $ids;
     }
 
 }
