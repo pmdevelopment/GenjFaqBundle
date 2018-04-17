@@ -22,16 +22,16 @@
     ],
 
     "require": {
-        "symfony/symfony": "^2.8.28|>=3.0",
-        "sensio/framework-extra-bundle": "~3.0",
-        "doctrine/orm": ">=2.5",
-        "doctrine/doctrine-bundle": "~1.6",
-        "gedmo/doctrine-extensions": ">=2.4.10"
+        "symfony/symfony": "^2.8.28|^3.4.8",
+        "sensio/framework-extra-bundle": "^5.1.6",
+        "doctrine/orm": "^2.5.0",
+        "doctrine/doctrine-bundle": "^1.8.1",
+        "gedmo/doctrine-extensions": "^2.4.33"
     },
 
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^2.7"
+        "symfony/phpunit-bridge": "^2.7|3.4.8"
     },
 
     "config": {
